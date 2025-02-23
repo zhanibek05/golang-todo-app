@@ -2,19 +2,22 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
+	"github.com/zhanibek05/golang-todo-app/pkg/service"
 )
 
 type Handler struct {
+	services *service.Service
+}
+
+func NewHandler(services *service.Service) *Handler {
+	return &Handler{services: services}
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 
 	// Health check route
-	router.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": "ok"})
-	})
+	router.GET("/health", h.healthcheck)
 
 	auth := router.Group("/auth")
 	{
